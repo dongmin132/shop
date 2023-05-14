@@ -72,4 +72,5 @@ class ItemServiceTest {
         assertEquals(itemFormDto.getStockNumber(), item.getStockNumber());
         assertEquals(multipartFileList.get(0).getOriginalFilename(), itemImgList.get(0).getOriImgName());
     }
+
 }

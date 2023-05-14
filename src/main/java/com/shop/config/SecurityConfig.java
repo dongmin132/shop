@@ -25,10 +25,16 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
+//                .authorizeRequests()
+////                .antMatchers("/members/login").authenticated()     // /members/**은 인증된 사용자에게만
+//                //.anyRequest(): 설정된 값 외에 나머지 URL
+//                .anyRequest().permitAll()   //나머지 URL은 전부 허용(로그인한 사용자만)
                 .authorizeRequests()
-//                .antMatchers("/members/login").authenticated()     // /members/**은 인증된 사용자에게만
-                //.anyRequest(): 설정된 값 외에 나머지 URL
-                .anyRequest().permitAll()   //나머지 URL은 전부 허용(로그인한 사용자만)
+                .antMatchers("/css/**", "/js/**", "/img/**").permitAll()
+                .antMatchers("/","/members/**","/item/**","/images").permitAll()    //인증없이 로그인 가능
+                .antMatchers("/admin/**").hasRole("ADMIN")  //ADMIN Role일 경우에만 접근 가능
+                .anyRequest().authenticated()   //나머지 경로들은 인증 후에 로그인 가능
+
                 .and()
 
                 .formLogin()        //Form Login은 아이디와 비밀번호를 입력해서 들어오는 로그인 형태를 지원하는 Spring Security 기능

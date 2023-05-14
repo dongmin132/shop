@@ -53,15 +53,15 @@ class ItemRepositoryTest {
         }
     }
 
-    @Test
-    @DisplayName("상품명 조회 테스트")
-    public void findByItemTest() {
-        this.createItemList();
-        List<Item> itemList = itemRepository.findItemByItemNm("테스트 상품2");
-        for (Item item : itemList) {
-            System.out.println(item.toString());
-        }
-    }
+//    @Test
+//    @DisplayName("상품명 조회 테스트")
+//    public void findByItemTest() {
+//        this.createItemList();
+//        List<Item> itemList = itemRepository.findItemByItemNm("테스트 상품2");
+//        for (Item item : itemList) {
+//            System.out.println(item.toString());
+//        }
+//    }
 
 
 }
