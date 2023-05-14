@@ -22,7 +22,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(ItemSearchDto itemSearchDto, Optional<Integer> page, Model model) {
-        System.out.println("home() asdasdd");
+        System.out.println("=========================home() asdasdd===========================================");
         Pageable pageable =PageRequest.of(page.isPresent() ? page.get() : 0,6);
         Page<MainItemDto> items =
                 itemService.getMainItemPage(itemSearchDto,pageable);

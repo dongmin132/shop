@@ -60,7 +60,7 @@ class OrderTest {
             orderItem.setItem(item);
             orderItem.setCount(10);
             orderItem.setOrderPrice(1000);
-            orderItem.setOrderId(order);
+            orderItem.setOrder(order);
             order.getOrderItems().add(orderItem);
         }
         Member member = new Member();
@@ -84,7 +84,7 @@ class OrderTest {
             orderItem.setItem(item);
             orderItem.setCount(10); //수량
             orderItem.setOrderPrice(1000);
-            orderItem.setOrderId(order);
+            orderItem.setOrder(order);
             order.getOrderItems().add(orderItem);   //아직 영속성 컨텍스트에 저장되지 않은 orderItem 엔티티를 order 엔티티에 담아줌
 
         }
@@ -109,11 +109,11 @@ class OrderTest {
 
         OrderItem orderItem = orderItemRepository.findById(orderItemId)
                 .orElseThrow(EntityNotFoundException::new);
-        System.out.println("Order class: " + orderItem.getOrderId().getClass());//orderItem 엔티티에 있는 order 객체의 클래스를 출력
+        System.out.println("Order class: " + orderItem.getOrder().getClass());//orderItem 엔티티에 있는 order 객체의 클래스를 출력
                                                                                 //Order클래스가 출력됨.
                                                         //지연 로딩으로 설정하면 실제 엔티티 대신에 프록시 객체를 넣어둠.
         System.out.println("=========================");
-        orderItem.getOrderId().getOrderDate();//주문일을 조회할 때 select 쿼리문이 실행되는것을 확인할수 있음
+        orderItem.getOrder().getOrderDate();//주문일을 조회할 때 select 쿼리문이 실행되는것을 확인할수 있음
         System.out.println("============================");
     }
 }
