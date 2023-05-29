@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .antMatchers("/css/**", "/js/**", "/img/**").permitAll()
                 .antMatchers("/","/members/**","/item/**","/images").permitAll()    //인증없이 로그인 가능
                 .antMatchers("/admin/**").hasRole("ADMIN")  //ADMIN Role일 경우에만 접근 가능
-                .anyRequest().authenticated()   //나머지 경로들은 인증 후에 로그인 가능
+                .anyRequest().permitAll()   //나머지 경로들은 인증 후에 로그인 가능
 
                 .and()
 
