@@ -58,6 +58,7 @@ public class Member extends BaseEntity {
 
     }
 
+
     public static Member createMember(MemberFormDto memberFormDto, PasswordEncoder passwordEncoder) {    //Member 엔티티를 생성하는 메소드
         //Member엔티티에 회원을 생성하는 메소드를 만들어 관리하면 코드가 변경되더라도 한 군데만 수정하면 됨
 
@@ -65,10 +66,19 @@ public class Member extends BaseEntity {
         member.setName(memberFormDto.getName());
         member.setEmail(memberFormDto.getEmail());
         //member.updateDefaultAddress(newDefaultAddress);
+
         member.setAddress(memberFormDto.getAddress());
+
+
         String password = passwordEncoder.encode(memberFormDto.getPassword());
         member.setPassword(password);
         member.setRole(Role.ADMIN);
+
+
+        Address address = new Address();
+        address.setAddress(memberFormDto.getAddress());
+        member.addAddress(address);
+
         return member;
     }
 

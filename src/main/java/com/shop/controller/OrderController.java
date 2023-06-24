@@ -92,16 +92,16 @@ public class OrderController {
         return "redirect:/";
     }
 
-    @GetMapping(value={"/orders", "/orders/{page}"})
+    @GetMapping(value = {"/orders", "/orders/{page}"})
     public String addressList(@PathVariable("page") Optional<Integer> page,
-                              Principal principal,Model model) {
-        Pageable pageable = PageRequest.of(page.isPresent()?page.get() : 0, 4); //한페이지에 보이는 주문 리스트
+                              Principal principal, Model model) {
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 1); //한페이지에 보이는 주문 리스트
 
         Page<AddressListDto> addressListDtoList =
-                orderService.getAddressList(principal.getName(),pageable);  //현재 로그인한 이메일과 페이징 객체를 파라미터로 전달하여 화면에 전달한 주문 목록 데이터 리턴
+                orderService.getAddressList(principal.getName(), pageable);  //현재 로그인한 이메일과 페이징 객체를 파라미터로 전달하여 화면에 전달한 주문 목록 데이터 리턴
         model.addAttribute("addresses", addressListDtoList);
         model.addAttribute("page", pageable.getPageNumber());
-        model.addAttribute("maxPage",5);
+        model.addAttribute("maxPage", 5);
 
         return "orders/addressList";
     }
