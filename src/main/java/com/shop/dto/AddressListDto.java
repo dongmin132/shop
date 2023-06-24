@@ -1,6 +1,7 @@
 package com.shop.dto;
 
 import com.shop.entity.Address;
+import com.shop.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,18 +16,22 @@ import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
+
 public class AddressListDto {
 
+    public AddressListDto(Member member) {
+        this.memberId = member.getId();
+        this.name = member.getName();
+        this.email = member.getEmail();
+    }
     private Long memberId;  //멤버 아이디
+
     private String name;
 
     private String email;
 
-    private String password;
-
     private List<AddressDto> addressList = new ArrayList<>();
+
 
     public void addAddressDto(AddressDto addressDto){     //AddressDto 객체를 주소 리스트에 추가하는 메서드
         addressList.add(addressDto);

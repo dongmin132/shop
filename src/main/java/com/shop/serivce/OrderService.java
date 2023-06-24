@@ -1,14 +1,16 @@
 package com.shop.serivce;
 
+import com.shop.dto.AddressDto;
+import com.shop.dto.AddressListDto;
 import com.shop.dto.OrderDto;
-import com.shop.entity.Item;
-import com.shop.entity.Member;
-import com.shop.entity.Order;
-import com.shop.entity.OrderItem;
+import com.shop.entity.*;
 import com.shop.repository.ItemRepository;
 import com.shop.repository.MemberRepository;
 import com.shop.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,5 +40,24 @@ public class OrderService {
         orderRepository.save(order);
 
         return order.getId();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<AddressListDto> getAddressList(String email, Pageable pageable) {
+        List<Member> members = memberRepository.findMembers(email, pageable);
+
+        List<AddressListDto> addressListDtos = new ArrayList<>();
+        Long totalCount = memberRepository.countMember(email);
+
+        for(Member member : members) {
+            AddressListDto addressListDto = new AddressListDto(member);
+            List<Address> addresses = member.getAddresses();
+            for (Address address : addresses) {
+                AddressDto addressDto = new AddressDto(address);//이거는 new addressDto를 따로 만들어야 될것 같기도?
+                addressListDto.addAddressDto(addressDto);
+            }
+            addressListDtos.add(addressListDto);
+        }
+        return new PageImpl<AddressListDto>(addressListDtos,pageable,totalCount);
     }
 }

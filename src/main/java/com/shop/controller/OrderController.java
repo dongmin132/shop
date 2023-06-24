@@ -1,9 +1,6 @@
 package com.shop.controller;
 
-import com.shop.dto.AddressDto;
-import com.shop.dto.ItemFormDto;
-import com.shop.dto.MemberFormDto;
-import com.shop.dto.OrderDto;
+import com.shop.dto.*;
 import com.shop.entity.Address;
 import com.shop.entity.Member;
 import com.shop.repository.AddressRepository;
@@ -13,6 +10,9 @@ import com.shop.repository.OrderRepository;
 import com.shop.serivce.ItemService;
 import com.shop.serivce.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -62,12 +63,12 @@ public class OrderController {
 
     @GetMapping("/orders/orderForm")
     public String orderForm(Principal principal, Model model,
-                            @RequestParam(value="itemId") Long itemId) {
+                            @RequestParam(value = "itemId") Long itemId) {
         String email = principal.getName();
         Member member = memberRepository.findByEmail(email);
         ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
 
-        model.addAttribute("member",member);
+        model.addAttribute("member", member);
         model.addAttribute("item", itemFormDto);
         return "orders/orderForm";
     }
@@ -75,20 +76,34 @@ public class OrderController {
 
     @GetMapping("/orders/payment")
     public String orders(Model model) {
+        Address address = new Address();
         model.addAttribute("addressDto", new AddressDto());
         return "orders/orderpayment";
     }
 
     @PostMapping("/orders/new")
-    public String ordersRegister(AddressDto addressDto,Principal principal) {
+    public String ordersRegister(AddressDto addressDto, Principal principal) {
         System.out.println("======================================================오류========================================================================");
         String email = principal.getName();
         Member member = memberRepository.findByEmail(email);
-        Address address = Address.createAddress(member,addressDto);
+        Address address = Address.createAddress(member, addressDto);
         addressRepository.save(address);
         member.addAddress(address);
         return "redirect:/";
     }
-    @GetMapping("/orders")
+
+    @GetMapping(value={"/orders", "/orders/{page}"})
+    public String addressList(@PathVariable("page") Optional<Integer> page,
+                              Principal principal,Model model) {
+        Pageable pageable = PageRequest.of(page.isPresent()?page.get() : 0, 4); //한페이지에 보이는 주문 리스트
+
+        Page<AddressListDto> addressListDtoList =
+                orderService.getAddressList(principal.getName(),pageable);  //현재 로그인한 이메일과 페이징 객체를 파라미터로 전달하여 화면에 전달한 주문 목록 데이터 리턴
+        model.addAttribute("addresses", addressListDtoList);
+        model.addAttribute("page", pageable.getPageNumber());
+        model.addAttribute("maxPage",5);
+
+        return "orders/addressList";
+    }
 }
 
