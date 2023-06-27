@@ -21,6 +21,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
@@ -95,15 +96,31 @@ public class OrderController {
     @GetMapping(value = {"/orders", "/orders/{page}"})
     public String addressList(@PathVariable("page") Optional<Integer> page,
                               Principal principal, Model model) {
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 1); //한페이지에 보이는 주문 리스트
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 4);  //한번에 가지고 올 주문의 개수는 4개로 설정
 
         Page<AddressListDto> addressListDtoList =
                 orderService.getAddressList(principal.getName(), pageable);  //현재 로그인한 이메일과 페이징 객체를 파라미터로 전달하여 화면에 전달한 주문 목록 데이터 리턴
         model.addAttribute("addresses", addressListDtoList);
         model.addAttribute("page", pageable.getPageNumber());
+        System.out.println("===================================" + pageable.getPageNumber());
         model.addAttribute("maxPage", 5);
 
         return "orders/addressList";
+    }
+
+    @GetMapping("/orders/payment/{aId}")    //주소의 id로 들어간다.
+    public String getAddress(@PathVariable("aId") Long aId, Model model) {
+
+        Address address = addressRepository.findById(aId)
+                .orElseThrow(EntityNotFoundException::new);
+        model.addAttribute("address", address);
+        return "orders/up-form";
+    }
+
+    @PutMapping("/orders/new/{aId}")
+    public String updateAddress(@ModelAttribute("address") Address address, Model model) {
+
+
     }
 }
 

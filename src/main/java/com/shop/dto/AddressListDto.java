@@ -2,10 +2,7 @@ package com.shop.dto;
 
 import com.shop.entity.Address;
 import com.shop.entity.Member;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
@@ -16,7 +13,7 @@ import java.util.List;
 
 @Getter
 @Setter
-
+@ToString
 public class AddressListDto {
 
     public AddressListDto(Member member) {
@@ -24,6 +21,7 @@ public class AddressListDto {
         this.name = member.getName();
         this.email = member.getEmail();
     }
+
     private Long memberId;  //멤버 아이디
 
     private String name;

@@ -4,6 +4,7 @@ import com.shop.dto.AddressDto;
 import com.shop.dto.AddressListDto;
 import com.shop.dto.OrderDto;
 import com.shop.entity.*;
+import com.shop.repository.AddressRepository;
 import com.shop.repository.ItemRepository;
 import com.shop.repository.MemberRepository;
 import com.shop.repository.OrderRepository;
@@ -25,6 +26,7 @@ public class OrderService {
     private final ItemRepository itemRepository;
     private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
+    private final AddressRepository addressRepository;
 
     public Long order(OrderDto orderDto, String email) {
         Item item = itemRepository.findById(orderDto.getItemId())       //주문할 상품을 조회
@@ -44,20 +46,32 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public Page<AddressListDto> getAddressList(String email, Pageable pageable) {
-        List<Member> members = memberRepository.findMembers(email, pageable);
-
+        List<Address> addresses = addressRepository.findMembers(email, pageable);
+        Long totalCount = addressRepository.countMember(email);
         List<AddressListDto> addressListDtos = new ArrayList<>();
-        Long totalCount = memberRepository.countMember(email);
 
-        for(Member member : members) {
-            AddressListDto addressListDto = new AddressListDto(member);
-            List<Address> addresses = member.getAddresses();
-            for (Address address : addresses) {
-                AddressDto addressDto = new AddressDto(address);//이거는 new addressDto를 따로 만들어야 될것 같기도?
-                addressListDto.addAddressDto(addressDto);
-            }
+        for (Address address : addresses) {
+            AddressListDto addressListDto = new AddressListDto(address.getMember());
+            AddressDto addressDto = new AddressDto(address);
+            addressListDto.addAddressDto(addressDto);
+
             addressListDtos.add(addressListDto);
         }
+
+        for (AddressListDto addressListDto : addressListDtos) {
+            System.out.println(addressListDto); // AddressListDto의 toString() 메서드가 정의되어 있다면 해당 메서드가 호출되어 값이 출력됩니다.
+            // 또는 원하는 속성을 개별적으로 출력할 수도 있습니다.
+            // ...
+        }
+
         return new PageImpl<AddressListDto>(addressListDtos,pageable,totalCount);
+    }
+    public void setAddressForMember(int addressId,String email) {
+        Member member = memberRepository.findByEmail(email);
+        List<Address> addresses = member.getAddresses();
+        if (!addresses.isEmpty()) {
+            Address selectedAddress = addresses.get(addressId); // 첫 번째 주소 선택
+            member.setAddressFromAddressList(selectedAddress);
+        }
     }
 }

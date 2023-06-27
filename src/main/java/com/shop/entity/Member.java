@@ -38,7 +38,7 @@ public class Member extends BaseEntity {
 //    //cascade: 부모 엔티티의 영속성 상태 변화를 자식 엔티티에 모두 전이하는 CascadeTypeAll 옵션을 설정
 //    private List<Address> addresses = new ArrayList<>(); //하나의 주문이 여러 개의 주문 상품을 갖으므로 List 자료형을 사용해서 매핑함
 
-    private String Address;
+    private String address;
 
     // 추가 주소들
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -82,5 +82,9 @@ public class Member extends BaseEntity {
         return member;
     }
 
+
+    public void setAddressFromAddressList(Address selectedAddress) {
+        this.address = selectedAddress.getAddress();
+    }
 
 }
