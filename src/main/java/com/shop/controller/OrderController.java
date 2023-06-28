@@ -118,7 +118,7 @@ public class OrderController {
     }
 
     @PutMapping("/orders/payment/{id}")
-    public @ResponseBody ResponseEntity updateAddress(@ModelAttribute Address address, Model model, Principal principal) {   //@ModelAttribute("address") Address address
+    public @ResponseBody ResponseEntity updateDefaultAddress(@ModelAttribute Address address, Model model, Principal principal) {   //@ModelAttribute("address") Address address
         try{
         orderService.setAddressForMember(principal.getName(), address.getId());
         //model.addAttribute(addressRepository.findById(address.getId()));
