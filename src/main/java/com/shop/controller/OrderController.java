@@ -118,10 +118,38 @@ public class OrderController {
     }
 
     @PutMapping("/orders/payment/{id}")
-    public String updateAddress(@PathVariable("id") Long addressId, Model model, Principal principal) {   //@ModelAttribute("address") Address address
-        orderService.setAddressForMember(principal.getName(), addressId);
+    public @ResponseBody ResponseEntity updateAddress(@ModelAttribute Address address, Model model, Principal principal) {   //@ModelAttribute("address") Address address
+        try{
+        orderService.setAddressForMember(principal.getName(), address.getId());
+        //model.addAttribute(addressRepository.findById(address.getId()));
+            return ResponseEntity.ok("주소 업데이트가 완료되었습니다아.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("주소 업데이트에 실패했습니다아.");
+        }
+    }
+
+    @PutMapping("/orders/new/{id}")
+    public String updateAddress(@ModelAttribute("addressDto") AddressDto addressDto, Model model) {
+        orderService.setAddressUpdate(addressDto);
         //model.addAttribute(addressRepository.findById(address.getId()));
         return "redirect:/orders/";
     }
+//    @PostMapping("/order")
+//    //@ResponseBody 어노테이션이 메서드 선언에 위치할 경우(지금 경우), 전체 응답을 나타내는 객체를 반환하며(ResponseEntity),
+//    //메서드 내부에 위치할 경우, 해당 메서드가 반환하는 값 자체가 응답 본문으로 사용됩니다.
+//    public @ResponseBody ResponseEntity order(@RequestBody @Valid OrderDto orderDto, BindingResult bindingResult,
+//                                              Principal principal) {
+//        String email = principal.getName();     //현재 로그인 유저의 정보를 얻기 위해 @Controller 어노테이션이 선언된 클래스에서 메소드 인자로 principal 객체를 넘겨 줄 경우
+//        //해당 객체에 직접 접근할 수 있다.
+//        //prinicipal 객체에서 현재 로그인한 회원의 이메일 정보를 조회한다.
+//        Long orderId;
+//        try {
+//            orderId = orderService.order(orderDto, email);  //화면으로부터 넘어오는 주문 정보와 회원의 이메일 정보를 이용하여 주문 로직을 호출
+//        } catch (Exception e) {
+//            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//        return new ResponseEntity<Long>(orderId, HttpStatus.OK);        //결과값으로 생성된 주문 정보와 요청이 성공했다는 HTTP 응답 상태 코드 반환
+//    }
+
 }
 
