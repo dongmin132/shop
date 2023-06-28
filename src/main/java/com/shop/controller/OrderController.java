@@ -117,10 +117,11 @@ public class OrderController {
         return "orders/up-form";
     }
 
-    @PutMapping("/orders/new/{aId}")
-    public String updateAddress(@ModelAttribute("address") Address address, Model model) {
-
-
+    @PutMapping("/orders/payment/{id}")
+    public String updateAddress(@ModelAttribute("addressDto") AddressDto addressDto, Model model) {
+        orderService.setAddressUpdate(addressDto);
+        //model.addAttribute(addressRepository.findById(address.getId()));
+        return "redirect:/orders/payment/" + addressDto.getId();
     }
 }
 

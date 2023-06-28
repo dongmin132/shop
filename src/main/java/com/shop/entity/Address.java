@@ -36,9 +36,13 @@ public class Address extends BaseEntity{
         public static Address createAddress(Member member, AddressDto addressDto) {
                 Address address = new Address();
                 address.setMember(member);
-                address.setAddress(addressDto.getAddress());
+                address.setAddress(addressDto.getAddress());            //Setter를 이용
 
                 return address;
+        }
+        public void updateForm(AddressDto addressDto) {
+                this.address = addressDto.getAddress();                 //this를 이용
+
         }
 
 }

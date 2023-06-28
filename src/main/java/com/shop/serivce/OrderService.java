@@ -66,12 +66,17 @@ public class OrderService {
 
         return new PageImpl<AddressListDto>(addressListDtos,pageable,totalCount);
     }
-    public void setAddressForMember(int addressId,String email) {
+    public void setAddressForMember(Address address,String email) {
         Member member = memberRepository.findByEmail(email);
-        List<Address> addresses = member.getAddresses();
-        if (!addresses.isEmpty()) {
-            Address selectedAddress = addresses.get(addressId); // 첫 번째 주소 선택
-            member.setAddressFromAddressList(selectedAddress);
-        }
+        Address existingAddress = addressRepository.findById(address.getId()).
+                orElseThrow(EntityNotFoundException::new);
+        member.setAddressFromAddressList(existingAddress);
+    }
+
+    public void setAddressUpdate(AddressDto addressDto) {
+        //Member member = memberRepository.findByEmail(email);
+        Address address = addressRepository.findById(addressDto.getId()).
+                orElseThrow(EntityNotFoundException::new);
+        address.updateForm(addressDto);
     }
 }

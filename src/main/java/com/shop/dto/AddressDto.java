@@ -10,6 +10,7 @@ import lombok.ToString;
 @ToString
 public class AddressDto {
     private String address;
+    private Long id;
 
     public AddressDto() {
 
