@@ -118,10 +118,10 @@ public class OrderController {
     }
 
     @PutMapping("/orders/payment/{id}")
-    public String updateAddress(@ModelAttribute("addressDto") AddressDto addressDto, Model model) {
-        orderService.setAddressUpdate(addressDto);
+    public String updateAddress(@PathVariable("id") Long addressId, Model model, Principal principal) {   //@ModelAttribute("address") Address address
+        orderService.setAddressForMember(principal.getName(), addressId);
         //model.addAttribute(addressRepository.findById(address.getId()));
-        return "redirect:/orders/payment/" + addressDto.getId();
+        return "redirect:/orders/";
     }
 }
 

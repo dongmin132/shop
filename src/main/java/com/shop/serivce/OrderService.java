@@ -66,11 +66,15 @@ public class OrderService {
 
         return new PageImpl<AddressListDto>(addressListDtos,pageable,totalCount);
     }
-    public void setAddressForMember(Address address,String email) {
+    public void setAddressForMember(String email, Long addressId) {
         Member member = memberRepository.findByEmail(email);
-        Address existingAddress = addressRepository.findById(address.getId()).
-                orElseThrow(EntityNotFoundException::new);
-        member.setAddressFromAddressList(existingAddress);
+        List<Address> addresses = member.getAddresses();
+        for (Address address : addresses) {
+            if (address.getId().equals(addressId)) {
+                member.setAddressFromAddressList(address);
+                break;
+            }
+        }
     }
 
     public void setAddressUpdate(AddressDto addressDto) {
