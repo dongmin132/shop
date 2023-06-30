@@ -1,6 +1,7 @@
 package com.shop.entity;
 
 import com.shop.constant.Role;
+import com.shop.dto.AddressDto;
 import com.shop.dto.MemberFormDto;
 import lombok.Builder;
 import lombok.Getter;

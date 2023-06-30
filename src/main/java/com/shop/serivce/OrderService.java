@@ -66,12 +66,16 @@ public class OrderService {
 
         return new PageImpl<AddressListDto>(addressListDtos,pageable,totalCount);
     }
-    public void setAddressForMember(String email, Long addressId) {
+
+    public void setAddressForMember(String email, AddressDto addressDto) {
         Member member = memberRepository.findByEmail(email);
         List<Address> addresses = member.getAddresses();
         for (Address address : addresses) {
-            if (address.getId().equals(addressId)) {
-                member.setAddressFromAddressList(address);
+            if (address.getId().equals(addressDto.getId())) {
+                Address updatedAddress = Address.builder()
+                        .address(addressDto.getAddress())
+                        .build();
+                member.setAddressFromAddressList(updatedAddress);
                 break;
             }
         }

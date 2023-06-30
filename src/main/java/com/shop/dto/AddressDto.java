@@ -18,4 +18,12 @@ public class AddressDto {
     public AddressDto(Address address) {
         this.address = address.getAddress();
     }
+
+    public static AddressDto toAddressDto(Address address) {
+        AddressDto addressDto = new AddressDto();
+        addressDto.setAddress(address.getAddress());
+        addressDto.setId(address.getId());
+
+        return addressDto;
+    }
 }

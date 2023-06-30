@@ -25,23 +25,32 @@
 <script th:inline="javascript">
   var isDefaultAddress = false;
 
-  function upAddress() {
+  function upAddress(checkbox) {
+    if (checkbox.checked) {
       var url = "/orders/payment/" + [[${address.id}]]; // 실제 주소 ID 값을 가져와서 설정해야 합니다.
-      console.log(url);
+
+      var requestData = {
+        id: [[${address.id}]], // 주소 ID 값을 요청 데이터에 포함합니다.
+        address: document.getElementById("user-road-address").value,
+      };
+      console.log(requestData);
       $.ajax({
         url: url,
         type: "PUT",
-        success: function(response) {
+        contentType: "application/json",
+        data: JSON.stringify(requestData),
+        success: function (response) {
           // 주소 업데이트 성공 시 동작할 코드 작성
           alert("주소 업데이트가 완료되었습니다.");
           // 추가 동작이 필요한 경우 여기에 작성
         },
-        error: function(jqXHR, status, error) {
+        error: function (jqXHR, status, error) {
           // 주소 업데이트 실패 시 동작할 코드 작성
           alert("주소 업데이트에 실패했습니다.");
           // 추가 동작이 필요한 경우 여기에 작성
         }
       });
+    }
   }
   function checkDefaultAddress(checkbox) {
     isDefaultAddress = checkbox.checked;
@@ -74,13 +83,13 @@
         <span>010-1111-1111</span>
       </div>
 
-      <form th:action="@{'/orders/new/' + ${address.id}}" th:object="${address}" th:method="put">
+      <form th:action="@{'/orders/payment/' + ${address.id}}" th:object="${address}" th:method="put">
       <div class="go-delivery">주소
         <input type="text" class="postcode" id="user-postcode" placeholder="우편번호">
         <input type="text" th:field="${address.address}" class="detail-address" id="user-road-address" placeholder="도로명주소">
         <input type="text" class="detail-address" id="user-detail-address" placeholder="상세주소">
         <div class="n-check-block">
-          <input type="checkbox" class="n-check" id="delivery_defaultCheck" onchange="checkDefaultAddress(this);">
+          <input type="checkbox" class="n-check" id="delivery_defaultCheck" onchange="upAddress(this);">
           <label for="delivery_defaultCheck">기본 배송지 설정</label>
         </div>
       </div>

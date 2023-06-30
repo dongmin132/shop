@@ -113,16 +113,28 @@ public class OrderController {
 
         Address address = addressRepository.findById(aId)
                 .orElseThrow(EntityNotFoundException::new);
-        model.addAttribute("address", address);
+
+        model.addAttribute("address", AddressDto.toAddressDto(address));
         return "orders/up-form";
     }
 
+//    @PostMapping("/orders/payment/{id}")
+//    public @ResponseBody ResponseEntity updateDefaultAddress(@PathVariable("id") Long addressId, Model model, Principal principal) {   //@ModelAttribute("address") Address address
+//        Address address = addressRepository.findById(addressId).orElse(null); // 디비에서 주소 정보 가져오기
+//        try{
+//        orderService.setAddressForMember(principal.getName(), address.getId());
+//        //model.addAttribute(addressRepository.findById(address.getId()));
+//            return ResponseEntity.ok("주소 업데이트가 완료되었습니다아.");
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body("주소 업데이트에 실패했습니다아.");
+//        }
+//    }
+
     @PutMapping("/orders/payment/{id}")
-    public @ResponseBody ResponseEntity updateDefaultAddress(@ModelAttribute Address address, Model model, Principal principal) {   //@ModelAttribute("address") Address address
+    public @ResponseBody ResponseEntity updateDefaultAddress(@PathVariable Long id ,@RequestBody AddressDto addressDto, Principal principal) {   //@ModelAttribute("address") Address address
         try{
-        orderService.setAddressForMember(principal.getName(), address.getId());
-        //model.addAttribute(addressRepository.findById(address.getId()));
-            return ResponseEntity.ok("주소 업데이트가 완료되었습니다아.");
+        orderService.setAddressForMember(principal.getName(), addressDto);
+        return ResponseEntity.ok("주소 업데이트가 완료되었습니다아.");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("주소 업데이트에 실패했습니다아.");
         }
