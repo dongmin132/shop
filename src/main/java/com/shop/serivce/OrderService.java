@@ -57,10 +57,12 @@ public class OrderService {
         for (Order order : orders) {                //주문 리스트를 순회하면서 구매 이력 페이지에 전달할 DTO를 생성
             OrderHistDto orderHistDto = new OrderHistDto(order);
             List<OrderItem> orderItems = order.getOrderItems();
-
+            for(OrderItem orderItem: orderItems)
+                System.out.println(orderItem);
             for (OrderItem orderItem : orderItems) {
                 ItemImg itemImg = itemImgRepository.findByItemIdAndRepimgYn(orderItem.getItem().getId(), "Y");      //주문한 상품의 대표 이미지를 조회
                 OrderItemDto orderItemDto = new OrderItemDto(orderItem, itemImg.getImgUrl());
+                //System.out.println(orderItemDto);
                 orderHistDto.addOrderItemDto(orderItemDto);
             }
             orderHistDtos.add(orderHistDto);

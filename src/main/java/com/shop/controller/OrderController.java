@@ -61,6 +61,7 @@ public class OrderController {
 
         model.addAttribute("orders", ordersHistDtoList);
         model.addAttribute("page", pageable.getPageNumber());
+        System.out.println("===================================" + pageable.getPageNumber());
         model.addAttribute("maxPage", 5);
 
         return "order/orderHist";
@@ -74,5 +75,7 @@ public class OrderController {
         orderService.cancelOrder(orderId);  //주문 취소 로직을 호출
         return new ResponseEntity<Long>(orderId, HttpStatus.OK);
     }
+
+
 }
 

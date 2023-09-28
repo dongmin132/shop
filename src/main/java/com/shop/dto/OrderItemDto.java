@@ -3,9 +3,11 @@ package com.shop.dto;
 import com.shop.entity.OrderItem;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public class OrderItemDto {     //주문 상품 정보
     public OrderItemDto(OrderItem orderItem, String imgUrl) {   //생성자로 orderItem 객체와 이미지 경로를 파라미터로 받아서
                                                                 //멤버 변수 값을 세팅.
